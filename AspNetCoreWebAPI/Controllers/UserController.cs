@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using AspNetCoreWebAPI.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCoreWebAPI.Controllers {
 
+    //[Authorize]
     [ApiController]
     [Route ("api/[controller]")]
     public class UserController : ControllerBase {
@@ -23,14 +25,10 @@ namespace AspNetCoreWebAPI.Controllers {
             return Ok (user);
         }
 
+        //[Authorize (Roles = "Admin")]
         [HttpPost ("setuser")]
         //[Route("setuser")]
         public ActionResult SetUser ([FromForm] UserRequestModel model) {
-            // TODO: json data post edildiği zaman parametreleri tek tek alamayız. Class içerisinde property olarak tanımlayıp o şekilde almalıyız.
-            //örneğin UserRequestModel model
-
-            //TODO: form-data yada x-www-form-urlencoded post edileceği zaman [FromForm]UserRequestModel model bu şekilde almalıyız.
-
             var users = GetUserList ();
 
             User userItem = new User () {
@@ -43,6 +41,7 @@ namespace AspNetCoreWebAPI.Controllers {
             return Ok (users);
         }
 
+        //[AllowAnonymous]
         [HttpPut ("putuser/{id}")]
         public IActionResult PutUser (int Id, UserRequestModel model) {
             var response = GetUserList ().Find (b => b.Id == Id);
